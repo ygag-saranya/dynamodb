@@ -116,39 +116,6 @@ print("count of data ", GeneratedCode.count())
 print(GeneratedCode.brand_code_index.count('AMAZON'))
 
 
-def get_an_item():
-    print('going to fetch item from dynamodb')
-    # scan query is very costly don't use
-    # for data in GeneratedCode.scan(GeneratedCode.brand_code.startswith('A')):
-    #     print(data.id, '-->', data.brand_code)
-    for item in GeneratedCode.query('9f7156ce-ae9f-11ed-90d3-4e15793eaa5b'):
-        print("query operation ", item.code, item.brand_code, item.created_at)
-    print("get operation", GeneratedCode.get('9f7156ce-ae9f-11ed-90d3-4e15793eaa5b').brand_code)
-
-
-# get_an_item()
-
-
-def update_an_item():
-    generated_code_obj = GeneratedCode.get('9f7156ce-ae9f-11ed-90d3-4e15793eaa5b')
-    generated_code_obj.update(actions=[GeneratedCode.created_at.set(datetime.now()),
-                                       GeneratedCode.currency_code.set('INR')])
-    print("created date in updated function", generated_code_obj.code, generated_code_obj.brand_code,
-          generated_code_obj.created_at)
-
-
-# update_an_item()
-
-
-# querying secondary index
-def get_an_item_from_GSI():
-    for brand_code in GeneratedCode.brand_code_index.query('MYN', limit=2):
-        print("Item queried from index:", brand_code.code, brand_code.created_at)
-
-
-# get_an_item_from_GSI()
-
-
 # Get n limit vouchers for given brand code
 def get_n_limit_vouchers_for_given_brand_code(brand_code, limit, currency_code, amount):
     for item in GeneratedCode.brand_code_index.query(brand_code, GeneratedCode.status == 'available', limit=limit):
@@ -186,3 +153,35 @@ def get_voucher_details_from_pack_code(pack_code):
 get_voucher_details_from_pack_code(6316543628196884)
 
 #
+
+def get_an_item():
+    print('going to fetch item from dynamodb')
+    # scan query is very costly don't use
+    # for data in GeneratedCode.scan(GeneratedCode.brand_code.startswith('A')):
+    #     print(data.id, '-->', data.brand_code)
+    for item in GeneratedCode.query('9f7156ce-ae9f-11ed-90d3-4e15793eaa5b'):
+        print("query operation ", item.code, item.brand_code, item.created_at)
+    print("get operation", GeneratedCode.get('9f7156ce-ae9f-11ed-90d3-4e15793eaa5b').brand_code)
+
+
+# get_an_item()
+
+
+def update_an_item():
+    generated_code_obj = GeneratedCode.get('9f7156ce-ae9f-11ed-90d3-4e15793eaa5b')
+    generated_code_obj.update(actions=[GeneratedCode.created_at.set(datetime.now()),
+                                       GeneratedCode.currency_code.set('INR')])
+    print("created date in updated function", generated_code_obj.code, generated_code_obj.brand_code,
+          generated_code_obj.created_at)
+
+
+# update_an_item()
+
+
+# querying secondary index
+def get_an_item_from_GSI():
+    for brand_code in GeneratedCode.brand_code_index.query('MYN', limit=2):
+        print("Item queried from index:", brand_code.code, brand_code.created_at)
+
+
+# get_an_item_from_GSI()
